@@ -12,8 +12,17 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+        // 1. Create an array of doubles with the size of 'length'.
+        // 2. Use a for loop to iterate from 0 to length - 1
+        // 3. In each iteration, calculate the multiple of 'number' by multiplying it with (i + 1).
+        // 4. Store the result in the array at index 'i'.
 
-        return []; // replace this return statement with your own
+        double[] multiples = new double[length];
+        for (int i = 0; i < length; i++)
+        {
+            multiples[i] = number * (i + 1);
+        }
+        return multiples; // replace this return statement with your own
     }
 
     /// <summary>
@@ -29,5 +38,27 @@ public static class Arrays
         // Remember: Using comments in your program, write down your process for solving this problem
         // step by step before you write the code. The plan should be clear enough that it could
         // be implemented by another person.
+        // 1. Check if the data list is empty or if amount is 0, in which case we can return immediately.
+        // 2. Calculate the effective rotation amount by taking the modulus of amount with the count    
+        //    of the data list to handle cases where amount is greater than the list size.
+        // 3. If the effective rotation amount is 0, return immediately as no rotation is needed.
+        // 4. Split the list into two parts: the last 'amount' elements and the rest of the list.
+        // 5. Concatenate the two parts in reverse order to achieve the right rotation.
+        if (data.Count == 0 || amount <= 0)
+        {
+            return;
+        }
+        int effectiveAmount = amount % data.Count;
+        if (effectiveAmount == 0)
+        {
+            return;
+        }
+        List<int> lastPart = data.GetRange(data.Count - effectiveAmount, effectiveAmount);
+        List<int> firstPart = data.GetRange(0, data.Count - effectiveAmount);
+        data.Clear();
+        data.AddRange(lastPart);
+        data.AddRange(firstPart);
+
+
     }
 }
