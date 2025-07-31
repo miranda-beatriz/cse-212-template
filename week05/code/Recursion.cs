@@ -15,7 +15,15 @@ public static class Recursion
     public static int SumSquaresRecursive(int n)
     {
         // TODO Start Problem 1
-        return 0;
+        if (n <= 0)
+        {
+            return 0;
+        }
+        else
+        {
+            return n * n + SumSquaresRecursive(n - 1);
+        }
+
     }
 
     /// <summary>
@@ -40,6 +48,18 @@ public static class Recursion
     public static void PermutationsChoose(List<string> results, string letters, int size, string word = "")
     {
         // TODO Start Problem 2
+        if (size == 0)
+        {
+            results.Add(word);
+            return;
+        }
+        for (int i = 0; i < letters.Length; i++)
+
+        {
+            char letter = letters[i];
+            string remainingLetters = letters.Substring(0, i) + letters.Substring(i + 1);
+            PermutationsChoose(results, remainingLetters, size - 1, word + letter);
+        }
     }
 
     /// <summary>
@@ -99,8 +119,18 @@ public static class Recursion
         // TODO Start Problem 3
 
         // Solve using recursion
-        decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
-        return ways;
+        if (remember == null)
+        {
+            remember = new Dictionary<int, decimal>();
+        }
+        if (remember.ContainsKey(s))
+        {
+            return remember[s];
+        }
+        remember[s] = CountWaysToClimb(s - 1, remember) + CountWaysToClimb(s - 2, remember) + CountWaysToClimb(s - 3, remember);
+
+        //decimal ways = CountWaysToClimb(s - 1) + CountWaysToClimb(s - 2) + CountWaysToClimb(s - 3);
+        return remember[s];
     }
 
     /// <summary>
@@ -119,6 +149,31 @@ public static class Recursion
     public static void WildcardBinary(string pattern, List<string> results)
     {
         // TODO Start Problem 4
+        if (string.IsNullOrEmpty(pattern))
+        {
+            results.Add(string.Empty);
+            return;
+        }
+        if (pattern[0] == '*')
+        {
+            WildcardBinary(pattern.Substring(1), results);
+            List<string> tempResults = new List<string>(results);
+            results.Clear();
+            foreach (var result in tempResults)
+            {
+                results.Add('0' + result);
+                results.Add('1' + result);
+            }
+        }
+        else
+        {
+            WildcardBinary(pattern.Substring(1), results);
+            for (int i = 0; i < results.Count; i++)
+            {
+                results[i] = pattern[0] + results[i];
+            }
+        }
+
     }
 
     /// <summary>
@@ -129,15 +184,36 @@ public static class Recursion
     {
         // If this is the first time running the function, then we need
         // to initialize the currPath list.
-        if (currPath == null) {
+        if (currPath == null)
+        {
             currPath = new List<ValueTuple<int, int>>();
         }
-        
-        // currPath.Add((1,2)); // Use this syntax to add to the current path
+
+        //currPath.Add((1, 2)); // Use this syntax to add to the current path
 
         // TODO Start Problem 5
         // ADD CODE HERE
 
-        // results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
+        if (!maze.IsValidMove(currPath, x, y))
+        {
+            return;
+        }
+        currPath.Add((x, y));
+
+        if (maze.IsEnd(x, y))
+        {
+            results.Add(currPath.AsString());
+        }
+        else
+        {
+            SolveMaze(results, maze, x - 1, y, new List<ValueTuple<int, int>>(currPath));
+            SolveMaze(results, maze, x + 1, y, new List<ValueTuple<int, int>>(currPath));
+            SolveMaze(results, maze, x, y - 1, new List<ValueTuple<int, int>>(currPath));
+            SolveMaze(results, maze, x, y + 1, new List<ValueTuple<int, int>>(currPath));
+
+        }
+
+
+        //results.Add(currPath.AsString()); // Use this to add your path to the results array keeping track of complete maze solutions when you find the solution.
     }
 }
